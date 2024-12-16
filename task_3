@@ -1,0 +1,36 @@
+import spacy
+
+# Load the English NLP model
+nlp = spacy.load("en_core_web_sm")
+
+# Define a simple function to generate responses
+def get_response(user_input):
+    # Process the user input
+    doc = nlp(user_input)
+
+    # Check for greetings
+    greetings = ["hello", "hi", "hey", "greetings"]
+    if any(token.text.lower() in greetings for token in doc):
+        return "Hello! How can I assist you today?"
+
+    # Check for questions
+    if any(token.dep_ == "ROOT" and token.tag_ == "VB" for token in doc):
+        return "That's an interesting question! Can you tell me more?"
+
+    # Default response
+    return "I'm not sure how to respond to that. Can you ask something else?"
+
+# Main loop for the chatbot
+def chat():
+    print("Chatbot: Hi! I'm a simple chatbot. Type 'exit' to end the conversation.")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == 'exit':
+            print("Chatbot: Goodbye!")
+            break
+        response = get_response(user_input)
+        print(f"Chatbot: {response}")
+
+# Start the chatbot
+if __name__ == "__main__":
+    chat()
